@@ -14,77 +14,128 @@ private:
     T* ptr;
     Counter* count;
 
+    void release()
+    {
+        if (count)
+        {
+            count->DecrementMain();
+            if (count->GetMain() == 0)
+            {
+                delete ptr;
+                ptr = nullptr;
+                if (count->GetWeak() == 0)
+                {
+                    delete count;
+                    count = nullptr;
+                }
+            }
+        }
+    }
+
 public:
     ShrdPtr() : ptr{ nullptr }, count{ nullptr } {}
 
     ShrdPtr(T* other) : ptr{ other }
     {
         count = new Counter();
-        (*count)++;
+        count->IncrementMain();
     }
 
-    ShrdPtr(const ShrdPtr<T>& other) : ptr{ other.ptr }, count{ other.count }
+
+    ShrdPtr(const ShrdPtr<T>&other) : ptr{ other.ptr }, count{ other.count }
     {
-        if (count) (*count)++;
+        if (count) 
+        {
+            count->IncrementMain();
+        }
+            
     }
+    
 
     ShrdPtr(const WeakPtr<T>& other) : ptr{ other.ptr }
     {
         count = other.count;
-        (*count)++;
+        count->IncrementMain();
     }
 
-    ~ShrdPtr() {
-        if (count != nullptr && ptr != nullptr) {
-            (*count)--;
-            if (count->Get() == 0) 
-            {
-                delete ptr;
-                delete count;
-            }
-        }
+    ~ShrdPtr()
+    {
+        release();
     }
 
     T& operator*() const
     {
-        return *ptr;
+        if (ptr) {
+            return *ptr;
+        }
+        else {
+            throw std::runtime_error("Dereferencing a null pointer.");
+        }
     }
+
     T* operator->() const
     {
-        return ptr;
+        if (ptr)
+        {
+            return ptr;
+        }
+        else
+        {
+            return nullptr;
+        }
     }
     T* Get() const
     {
-        return ptr;
+        if (ptr)
+        {
+            return ptr;
+        }
+        else
+        {
+            return nullptr;
+        }
     }
 
-    ShrdPtr& operator=(const ShrdPtr& other)
-    {
-        if (this != &other)
+    ShrdPtr& operator=(const ShrdPtr& other) {
+        if (this != &other) 
         {
-            if (count)
-            {
-                (*count)--;
-                if (count->Get() == 0)
-                {
-                    delete ptr;
-                    delete count;
-                }
-            }
+            release();
             ptr = other.ptr;
             count = other.count;
-            if (count) (*count)++;
+            if (count) 
+            {
+                count->IncrementMain();
+            }
         }
         return *this;
     }
 
+
     ShrdPtr& operator=(T* other)
     {
-        count = new Counter();
-        (*count)++;
+        if (count) 
+        {
+            count->DecrementMain();
+            if (count->GetMain() == 0) {
+                delete ptr;
+                if (count->GetWeak() == 0) {
+                    delete count;
+                }
+            }
+        }
         ptr = other;
+        if (other) 
+        {
+            count = new Counter();
+        }
+        else 
+        {
+            count = nullptr;
+        }
+
         return *this;
     }
+
 
     int Use_count() const
     {

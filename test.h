@@ -9,6 +9,7 @@ void Test1_OfListSequenceMutable();
 void Test2_OfListSequenceMutable();
 void Test3_OfListSequenceMutable();
 void Test4_OfListSequenceMutable();
+void Test5_OfListSequnceMutable();
 void Test1_OfLinkedList();
 void Test2_OfLinkedList();
 void Test3_OfLinkedList();

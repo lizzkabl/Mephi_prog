@@ -137,6 +137,27 @@ void Test4_OfListSequenceMutable()
     }
 }
 
+void Test5_OfListSequnceMutable()
+{
+	const int n1 = 5;
+	int arr1[n1] = { 1 ,2 ,3, 4, 5 };
+
+	ListSequenceMutable<int> list_seq(arr1, n1);
+	for (int i = 0; i < n1; i++)
+	{
+		for (int j = i + 1; j < n1; j++)
+		{
+			ListSequenceMutable<int> sub_seq = *(list_seq.GetSubsequence(i, j));
+			assert(sub_seq.GetLength() == j - i + 1);
+			for (int x = i; x < j; x++)
+			{
+
+				assert(arr1[x] == sub_seq.Get(x - i));
+			}
+		}
+	}
+}
+
 
 
 int main()
@@ -145,6 +166,7 @@ int main()
 	Test2_OfListSequenceMutable();
 	Test3_OfListSequenceMutable();
 	Test4_OfListSequenceMutable();
+	Test5_OfListSequnceMutable();
 	Test1_OfLinkedList();
 	Test2_OfLinkedList();
 	Test3_OfLinkedList();

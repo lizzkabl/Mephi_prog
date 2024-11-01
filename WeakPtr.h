@@ -15,69 +15,66 @@ private:
     T* ptr;
     Counter* count;
 
+    void release()
+    {
+        if (count) {
+            count->DecrementWeak();
+            if (count->GetMain() == 0 && count->GetWeak() == 0) {
+                delete count;
+                count = nullptr;
+            }
+        }
+    }
+
 public:
     WeakPtr() : ptr(nullptr), count(nullptr) {}
 
     WeakPtr(const WeakPtr& other) : ptr{ other.ptr }, count{ other.count }
     {
-        if (count) (*count)++;
+        if (count)
+        {
+            count->IncrementWeak();
+        }
     }
 
     WeakPtr(const ShrdPtr<T>& other) : ptr{ other.ptr }, count{ other.count }
     {
-        if (count) (*count)++;
+        if (count)
+        {
+            count->IncrementWeak();
+        }
     }
 
     ~WeakPtr()
     {
-        if (count)
-        {
-            (*count)--;
-            if (count->Get() == 0)
-            {
-                delete count;
-            }
-        }
+        release();
     }
+
 
     WeakPtr& operator=(const WeakPtr& other)
     {
-        if (this != &other)
+        if (this != &other) 
         {
-            reset();
+            release();
             ptr = other.ptr;
             count = other.count;
-            if (count) (*count)++;
+            if (count) count->IncrementWeak();
         }
         return *this;
     }
 
     WeakPtr& operator=(const ShrdPtr<T>& other)
     {
-        reset();
+        release();
         ptr = other.ptr;
         count = other.count;
-        if (count) (*count)++;
+        if (count) count->IncrementWeak();
         return *this;
     }
 
     int Use_count() const
     {
-        return count ? count->Get() : 0;
-    }
-
-    void reset()
-    {
-        if (count)
-        {
-            (*count)--;
-            if (count->Get() == 0)
-            {
-                delete count;
-            }
-        }
-        ptr = nullptr;
-        count = nullptr;
+        return count ? count->GetMain() : 0;
     }
 
     void Swap(WeakPtr& other)

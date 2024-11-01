@@ -1,55 +1,40 @@
 #pragma once
-
 class Counter
 {
 private:
-    int count;
-
-    // Deleted copy constructor to prevent copying
-    Counter(const Counter& other) : count(other.count) {}
-    
+    int main_count;  
+    int weak_count;    
 
 public:
-    // Default constructor initializes count to 1 (useful for shared pointer)
-    Counter() : count(1) {}
 
-    void Reset()
+    Counter() : main_count(1), weak_count(0) {}
+
+    void IncrementMain() 
     {
-        count = 0;
+        ++main_count;
     }
 
-    int Get() const
+    void DecrementMain() 
     {
-        return count;
+        --main_count;
     }
 
-    // Prefix increment
-    Counter& operator++()
+    void IncrementWeak() 
     {
-        ++count;
-        return *this;
+        ++weak_count;
     }
 
-    // Postfix increment
-    Counter operator++(int)
+    void DecrementWeak() 
     {
-        Counter temp = *this;
-        count++;
-        return temp;
+        --weak_count;
+    }
+    int GetMain() const 
+    {
+        return main_count;
     }
 
-    // Prefix decrement
-    Counter& operator--()
+    int GetWeak() const 
     {
-        --count;
-        return *this;
-    }
-
-    // Postfix decrement
-    Counter operator--(int)
-    {
-        Counter temp = *this;
-        count--;
-        return temp;
+        return weak_count;
     }
 };

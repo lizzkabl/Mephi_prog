@@ -51,4 +51,10 @@ public:
         this->items.InsertAt(item, index);
     }
 
+    ShrdPtr<ListSequenceMutable<T>> GetSubsequence(const int startIndex, const int endIndex) const 
+    {
+        ShrdPtr<LinkedList<T>> sub_list = this->items.GetSubList(startIndex, endIndex);
+        return ShrdPtr<ListSequenceMutable<T>>(new ListSequenceMutable<T>(*sub_list));
+    }
+
 };

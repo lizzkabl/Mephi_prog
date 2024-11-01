@@ -18,7 +18,7 @@ public:
 	{
 		if (ptr)
 		{
-			delete[] ptr;
+			delete ptr;
 		}
 	}
 	UnqPtr& operator=(UnqPtr<T>&& other)
@@ -36,11 +36,12 @@ public:
 	{
 		return ptr;
 	}
-	T Release()
+	T* Release()
 	{
 		T* temp = ptr;
 		ptr = nullptr;
-		return temp;
+		delete ptr;
+		return *temp;
 	}
 	void Reset(T* other)
 	{
@@ -49,17 +50,32 @@ public:
 	}
 	T& operator*() const
 	{
-		return *ptr;
+		if (ptr)
+		{
+			return *ptr;
+		}
+		else
+		{
+			return nullptr;
+		}
+		
 	}
 	T* operator->() const
 	{
-		return ptr;
+		if (ptr)
+		{
+			return ptr;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 	explicit operator bool() const
 	{
 		return ptr != nullptr;
 	}
-	void Swap(UnqPtr<T>&& other)
+	void Swap(UnqPtr<T> other)
 	{
 		T* temp = ptr;
 		ptr = other.ptr;
