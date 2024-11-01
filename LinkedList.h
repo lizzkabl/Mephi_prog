@@ -1,199 +1,157 @@
 #pragma once
 #include "ShrdPtr.h"
+#include "WeakPtr.h"
+
 template<typename T>
 struct Node
 {
-	T data;
-	ShrdPtr<Node<T>> prev;
-	ShrdPtr<Node<T>> next;
+    T data;
+    WeakPtr<Node<T>> prev;
+    ShrdPtr<Node<T>> next;
 
-	Node() : data{ NULL }, prev{ nullptr }, next{ nullptr } { }
-	Node(const T& item) : data{ item }, prev{ nullptr }, next{ nullptr } { }
+    Node() : data{ T() }, prev{ nullptr }, next{ nullptr } {}
+    Node(const T& item) : data{ item }, prev{ nullptr }, next{ nullptr } {}
 };
 
 template <class T>
 class LinkedList {
 private:
-	size_t size;
-	ShrdPtr<Node<T>> head;
-	ShrdPtr<Node<T>> tail;
+    size_t size;
+    ShrdPtr<Node<T>> head;
+    ShrdPtr<Node<T>> tail;
 
 public:
-	~LinkedList() = default;
+    ~LinkedList() = default;
 
-	LinkedList()
-	{
-		this->head = this->tail = nullptr;
-		this->size = 0;
-	}
+    LinkedList() : head{ nullptr }, tail{ nullptr }, size{ 0 } {}
 
-	LinkedList(const LinkedList <T>& other) :size{ other.size }
-	{
-		ShrdPtr<Node<T>> help = other.head;
-		for (int i = 0; i < size; i++)
-		{
-			Node<T>* p = new Node<T>(help->data);
-			p->prev = this->tail;
+    LinkedList(const LinkedList <T>& other) : size{ other.size }
+    {
+        ShrdPtr<Node<T>> help = other.head;
+        for (size_t i = 0; i < size; ++i) {
+            Append(help->data);
+            if (help->next != nullptr) {
+                help = help->next;
+            }
+        }
+    }
 
-			if (tail != NULL)
-			{
-				this->tail->next = p;
-			}
-			if (head == NULL)
-			{
-				this->head = p;
-			}
-			this->tail = p;
-			if (help->next != NULL)
-			{
-				help = help->next;
-			}
-		}
-	}
+    LinkedList(T* items, size_t count) : size{ 0 }, head{ nullptr }, tail{ nullptr }
+    {
+        for (size_t i = 0; i < count; ++i) {
+            Append(items[i]);
+        }
+    }
 
-	LinkedList(T* items, size_t count)
-	{
-		this->size = count;
-		for (int i = 0; i < count; i++)
-		{
-			Node<T>* p = new Node<T>(items[i]);
-			p->prev = this->tail;
-			if (tail != NULL)
-			{
-				this->tail->next = p;
-			}
-			if (head == NULL)
-			{
-				this->head = p;
-			}
-			this->tail = p;
-		}
-	}
+    T GetFirst() const
+    {
+        if (GetLength() == 0) {
+            throw std::out_of_range("Index out of range");
+        }
+        return head->data;
+    }
 
-	T GetFirst() const
-	{
-		if (this->GetLength() == 0)
-		{
-			throw  "IndexOutOfRange";
-		}
-		return this->head->data;
-	}
+    T GetLast() const
+    {
+        if (GetLength() == 0) {
+            throw std::out_of_range("Index out of range");
+        }
+        return tail->data;
+    }
 
-	T GetLast() const
-	{
-		if (this->GetLength() == 0)
-		{
-			throw  "IndexOutOfRange";
-		}
-		return this->tail->data;
-	}
+    T Get(int index) const
+    {
+        if (index >= GetLength() || index < 0) {
+            throw std::out_of_range("Index out of range");
+        }
 
+        ShrdPtr<Node<T>> elem = head;
+        for (int i = 0; i < index; ++i) {
+            elem = elem->next;
+        }
+        return elem->data;
+    }
 
-	T Get(int index) const
-	{
+    int GetLength() const
+    {
+        return static_cast<int>(size);
+    }
 
-		if (index >= this->GetLength() or index < 0)
-		{
-			throw  "IndexOutOfRange";
-		}
+    ShrdPtr<LinkedList<T>> GetSubList(int startIndex, int endIndex) const
+    {
+        if (startIndex >= GetLength() || startIndex < 0 || endIndex >= GetLength() || endIndex < 0) {
+            throw std::out_of_range("Index out of range");
+        }
 
-		ShrdPtr<Node<T>> elem = head;
-		for (int i = 0; i < index; i++)
-		{
-			elem = elem->next;
-		}
-		return elem->data;
-	}
+        ShrdPtr<LinkedList<T>> sub_list(new LinkedList<T>());
 
-	int GetLength() const
-	{
-		return this->size;
-	}
+        ShrdPtr<Node<T>> elem = head;
+        for (int i = 0; i <= endIndex; ++i) {
+            if (i >= startIndex) {
+                sub_list->Append(elem->data);
+            }
+            elem = elem->next;
+        }
+        return sub_list;
+    }
 
-	ShrdPtr<LinkedList<T>> GetSubList(int startIndex, int endIndex) const
-	{
-		if (startIndex >= this->GetLength() || startIndex < 0 || endIndex >= this->GetLength() || endIndex < 0)
-		{
-			throw std::out_of_range("Index out of range");
-		}
+    void Append(const T& item)
+    {
+        ShrdPtr<Node<T>> p(new Node<T>(item));
+        p->prev = tail;
 
-		ShrdPtr<LinkedList<T>> sub_list(new LinkedList<T>());
+        if (tail != nullptr) {
+            tail->next = p;
+        }
+        else {
+            head = p;
+        }
+        tail = p;
+        ++size;
+    }
 
-		ShrdPtr<Node<T>> elem = this->head;
-		for (int i = 0; i <= endIndex; i++)
-		{
-			if (i >= startIndex)
-			{
-				sub_list->Append(elem->data);
-			}
-			elem = elem->next;
-		}
-		return sub_list;
-	}
+    void Prepend(const T& item)
+    {
+        ShrdPtr<Node<T>> p(new Node<T>(item));
+        p->next = head;
 
+        if (head != nullptr) {
+            head->prev = p;
+        }
+        else {
+            tail = p;
+        }
+        head = p;
+        ++size;
+    }
 
+    void InsertAt(const T& item, int index)
+    {
+        if (index >= GetLength() || index < 0) {
+            throw std::out_of_range("Index out of range");
+        }
+        if (index == 0) {
+            Prepend(item);
+            return;
+        }
+        else if (index == GetLength()) {
+            Append(item);
+            return;
+        }
 
-	void Append(const T& item)
-	{
-		Node<T>* p = new Node<T>(item);
+        ShrdPtr<Node<T>> right = head;
+        for (int i = 0; i < index; ++i) {
+            right = right->next;
+        }
 
-		p->prev = this->tail;
+        ShrdPtr<Node<T>> left = right->prev.lock();
+        ShrdPtr<Node<T>> p(new Node<T>(item));
+        p->prev = left;
+        p->next = right;
 
-		if (tail != NULL)
-		{
-			this->tail->next = p;
-		}
-		else
-		{
-			this->head = p;
-		}
-		this->tail = p;
-		this->size += 1;
-	}
+        if (left) left->next = p;
+        if (right) right->prev = p;
 
-	void Prepend(const T& item)
-	{
-		Node<T>* p = new Node<T>(item);
-		p->next = head;
-		if (this->head != NULL)
-		{
-			this->head->prev = p;
-		}
-		else
-		{
-			this->tail = p;
-		}
-		this->head = p;
-		this->size += 1;
-	}
-
-	void InsertAt(const T& item, int index)
-	{
-		if (index >= this->GetLength() or index <= 0)
-		{
-			throw  "IndexOutOfRange";
-		}
-		ShrdPtr<Node<T>> right = head;
-		for (int i = 0; i < index; i++)
-		{
-			right = right->next;
-		}
-		if (right == NULL)
-		{
-			this->Append(item);
-		}
-		ShrdPtr<Node<T>> left = right->prev;
-
-		if (right == NULL)
-		{
-			this->Prepend(item);
-		}
-		ShrdPtr < Node<T>> p = new Node<T>(item);
-		p->prev = left;
-		p->next = right;
-		left->next = p;
-		right->prev = p;
-		this->size += 1;
-	}
+        ++size;
+    }
 };
-
