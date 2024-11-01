@@ -7,7 +7,6 @@
 template <typename T>
 class ShrdPtr;
 
-
 template <class T>
 class WeakPtr
 {
@@ -15,11 +14,12 @@ private:
     T* ptr;
     Counter* count;
 
-    void release()
+    void Release()
     {
         if (count) {
             count->DecrementWeak();
-            if (count->GetMain() == 0 && count->GetWeak() == 0) {
+            if (count->GetMain() == 0 && count->GetWeak() == 0) 
+            {
                 delete count;
                 count = nullptr;
             }
@@ -47,7 +47,7 @@ public:
 
     ~WeakPtr()
     {
-        release();
+        Release();
     }
 
 
@@ -55,7 +55,7 @@ public:
     {
         if (this != &other) 
         {
-            release();
+            Release();
             ptr = other.ptr;
             count = other.count;
             if (count) count->IncrementWeak();
@@ -65,7 +65,7 @@ public:
 
     WeakPtr& operator=(const ShrdPtr<T>& other)
     {
-        release();
+        Release();
         ptr = other.ptr;
         count = other.count;
         if (count) count->IncrementWeak();
@@ -83,14 +83,14 @@ public:
         std::swap(count, other.count);
     }
 
-    bool expired() const
+    bool Expired() const
     {
         return Use_count() == 0;
     }
 
-    ShrdPtr<T> lock() const
+    ShrdPtr<T> Lock() const
     {
-        return expired() ? ShrdPtr<T>() : ShrdPtr<T>(*this);
+        return Expired() ? ShrdPtr<T>() : ShrdPtr<T>(*this);
     }
 
     friend class ShrdPtr<T>;

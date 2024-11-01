@@ -25,27 +25,27 @@ public:
 
     LinkedList() : head{ nullptr }, tail{ nullptr }, size{ 0 } {}
 
-    LinkedList(const LinkedList <T>& other) : size{ other.size }
+    LinkedList(const LinkedList <T>& other) : size{ 0 }
     {
         ShrdPtr<Node<T>> help = other.head;
-        for (size_t i = 0; i < size; ++i) {
+        for (size_t i = 0; i < size; ++i) 
+        {
             Append(help->data);
-            if (help->next != nullptr) {
-                help = help->next;
-            }
         }
     }
 
     LinkedList(T* items, size_t count) : size{ 0 }, head{ nullptr }, tail{ nullptr }
     {
-        for (size_t i = 0; i < count; ++i) {
+        for (size_t i = 0; i < count; ++i) 
+        {
             Append(items[i]);
         }
     }
 
     T GetFirst() const
     {
-        if (GetLength() == 0) {
+        if (GetLength() == 0) 
+        {
             throw std::out_of_range("Index out of range");
         }
         return head->data;
@@ -53,7 +53,8 @@ public:
 
     T GetLast() const
     {
-        if (GetLength() == 0) {
+        if (GetLength() == 0)
+        {
             throw std::out_of_range("Index out of range");
         }
         return tail->data;
@@ -61,33 +62,38 @@ public:
 
     T Get(int index) const
     {
-        if (index >= GetLength() || index < 0) {
+        if (index >= GetLength() || index < 0) 
+        {
             throw std::out_of_range("Index out of range");
         }
 
         ShrdPtr<Node<T>> elem = head;
-        for (int i = 0; i < index; ++i) {
+        for (int i = 0; i < index; ++i) 
+        {
             elem = elem->next;
         }
         return elem->data;
     }
 
-    int GetLength() const
+    size_t GetLength() const
     {
-        return static_cast<int>(size);
+        return size;
     }
 
-    ShrdPtr<LinkedList<T>> GetSubList(int startIndex, int endIndex) const
+    ShrdPtr<LinkedList<T>> GetSubList(int start_index, int end_index) const
     {
-        if (startIndex >= GetLength() || startIndex < 0 || endIndex >= GetLength() || endIndex < 0) {
+        if (start_index >= GetLength() || start_index < 0 || end_index >= GetLength() || end_index < 0)
+        {
             throw std::out_of_range("Index out of range");
         }
 
         ShrdPtr<LinkedList<T>> sub_list(new LinkedList<T>());
 
         ShrdPtr<Node<T>> elem = head;
-        for (int i = 0; i <= endIndex; ++i) {
-            if (i >= startIndex) {
+        for (int i = 0; i <= end_index; ++i) 
+        {
+            if (i >= start_index)
+            {
                 sub_list->Append(elem->data);
             }
             elem = elem->next;
@@ -100,10 +106,12 @@ public:
         ShrdPtr<Node<T>> p(new Node<T>(item));
         p->prev = tail;
 
-        if (tail != nullptr) {
+        if (tail != nullptr) 
+        {
             tail->next = p;
         }
-        else {
+        else 
+        {
             head = p;
         }
         tail = p;
@@ -115,10 +123,12 @@ public:
         ShrdPtr<Node<T>> p(new Node<T>(item));
         p->next = head;
 
-        if (head != nullptr) {
+        if (head != nullptr) 
+        {
             head->prev = p;
         }
-        else {
+        else 
+        {
             tail = p;
         }
         head = p;
@@ -127,31 +137,40 @@ public:
 
     void InsertAt(const T& item, int index)
     {
-        if (index >= GetLength() || index < 0) {
+        if (index > GetLength() || index < 0) 
+        {
             throw std::out_of_range("Index out of range");
         }
-        if (index == 0) {
+        if (index == 0) 
+        {
             Prepend(item);
             return;
         }
-        else if (index == GetLength()) {
+        else if (index == GetLength()) 
+        {
             Append(item);
             return;
         }
 
         ShrdPtr<Node<T>> right = head;
-        for (int i = 0; i < index; ++i) {
+        for (int i = 0; i < index; ++i) 
+        {
             right = right->next;
         }
 
-        ShrdPtr<Node<T>> left = right->prev.lock();
+        ShrdPtr<Node<T>> left = right->prev.Lock();
         ShrdPtr<Node<T>> p(new Node<T>(item));
         p->prev = left;
         p->next = right;
 
-        if (left) left->next = p;
-        if (right) right->prev = p;
-
+        if (left) 
+        {
+            left->next = p;
+        }
+        if (right)
+        {
+            right->prev = p;
+        }
         ++size;
     }
 };

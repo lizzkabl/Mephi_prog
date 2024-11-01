@@ -264,7 +264,7 @@ void EnterElementsAtPosition(HWND hWnd)
             sequence->InsertAt(elem, pos);
             success = true;
         }
-        catch (const char* error_message)
+        catch (...)
         {
             std::wstringstream errorStream;
             errorStream << L"Failed to add element " << elem << L" at position " << pos << L".\n";
@@ -293,11 +293,6 @@ void ShowSubSeq(HWND hWnd)
     int pos1 = std::wcstol(buffer2, nullptr, 10);
     try
     {
-        if ((pos1 > pos2) || (pos1 < 0) || (pos2 >= sequence->GetLength()))
-        {
-            throw std::out_of_range("Invalid positions.");
-        }
-
         std::wstringstream ss;
         ShrdPtr<LinkedList<int>> subsequence = sequence->GetSubList(pos1, pos2);
         for (int i = 0; i < subsequence->GetLength(); i++)
@@ -306,19 +301,14 @@ void ShowSubSeq(HWND hWnd)
         }
         MessageBox(hWnd, ss.str().c_str(), L"Subsequence", MB_OK);
     }
-    catch (const std::out_of_range& e)
+    catch (...)
     {
         MessageBox(hWnd, L"Invalid positions.", L"Error", MB_OK);
-    }
-    catch (const std::exception& e)
-    {
-        MessageBox(hWnd, L"An error occurred while retrieving the subsequence.", L"Error", MB_OK);
     }
 }
 
 void RunTests()
-{
-  
+{  
     Test1_OfListSequenceMutable();
     Test2_OfListSequenceMutable();
     Test3_OfListSequenceMutable();

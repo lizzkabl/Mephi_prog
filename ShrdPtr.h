@@ -14,7 +14,7 @@ private:
     T* ptr;
     Counter* count;
 
-    void release()
+    void Release()
     {
         if (count)
         {
@@ -47,8 +47,7 @@ public:
         if (count) 
         {
             count->IncrementMain();
-        }
-            
+        }     
     }
     
 
@@ -60,20 +59,33 @@ public:
 
     ~ShrdPtr()
     {
-        release();
+        Release();
     }
 
-    T& operator*() const
+    const T& operator*() const
     {
-        if (ptr) {
+        if (ptr) 
+        {
             return *ptr;
         }
-        else {
+        else 
+        {
+            throw std::runtime_error("Dereferencing a null pointer.");
+        }
+    }
+    T& operator*()
+    {
+        if (ptr) 
+        {
+            return *ptr;
+        }
+        else 
+        {
             throw std::runtime_error("Dereferencing a null pointer.");
         }
     }
 
-    T* operator->() const
+    const T* operator->() const
     {
         if (ptr)
         {
@@ -81,10 +93,21 @@ public:
         }
         else
         {
-            return nullptr;
+            throw std::runtime_error("Dereferencing a null pointer.");
         }
     }
-    T* Get() const
+
+    T* operator->() {
+        if (ptr)
+        {
+            return ptr;
+        }
+        else 
+        {
+            throw std::runtime_error("Dereferencing a null pointer.");
+        }
+    }
+    const T* Get() const
     {
         if (ptr)
         {
@@ -92,14 +115,25 @@ public:
         }
         else
         {
-            return nullptr;
+            throw std::runtime_error("Dereferencing a null pointer.");
+        }
+    }
+    T* Get() 
+    {
+        if (ptr)
+        {
+            return ptr;
+        }
+        else 
+        {
+            throw std::runtime_error("Dereferencing a null pointer.");
         }
     }
 
     ShrdPtr& operator=(const ShrdPtr& other) {
         if (this != &other) 
         {
-            release();
+            Release();
             ptr = other.ptr;
             count = other.count;
             if (count) 
@@ -113,16 +147,7 @@ public:
 
     ShrdPtr& operator=(T* other)
     {
-        if (count) 
-        {
-            count->DecrementMain();
-            if (count->GetMain() == 0) {
-                delete ptr;
-                if (count->GetWeak() == 0) {
-                    delete count;
-                }
-            }
-        }
+        Release();
         ptr = other;
         if (other) 
         {
@@ -132,7 +157,6 @@ public:
         {
             count = nullptr;
         }
-
         return *this;
     }
 
@@ -167,7 +191,6 @@ public:
     {
         return ptr == nullptr;
     }
-
     friend class WeakPtr<T>;
 };
 

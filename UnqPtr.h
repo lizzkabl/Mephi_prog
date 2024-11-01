@@ -11,7 +11,7 @@ private:
 
 public:
 	UnqPtr() : ptr{ nullptr } {}
-	UnqPtr(const T* other) : ptr{ other } {}
+	UnqPtr(T* other) : ptr{ other } {}
 	UnqPtr(const UnqPtr&) = delete;
 	UnqPtr(const UnqPtr&& other) noexcept : ptr(other.ptr) { other.ptr = nullptr; }
 	~UnqPtr()
@@ -48,7 +48,8 @@ public:
 		delete ptr;
 		ptr = other;
 	}
-	T& operator*() const
+
+	T& operator*() 
 	{
 		if (ptr)
 		{
@@ -56,11 +57,24 @@ public:
 		}
 		else
 		{
-			return nullptr;
+			throw std::runtime_error("Dereferencing a null pointer.");
 		}
 		
 	}
-	T* operator->() const
+
+	const T& operator*() const
+	{
+		if (ptr)
+		{
+			return *ptr;
+		}
+		else
+		{
+			throw std::runtime_error("Dereferencing a null pointer.");
+		}
+	}
+
+	T* operator->()
 	{
 		if (ptr)
 		{
@@ -68,18 +82,31 @@ public:
 		}
 		else
 		{
-			return nullptr;
+			throw std::runtime_error("Dereferencing a null pointer.");
 		}
 	}
+
+	const T* operator->() const
+	{
+		if (ptr)
+		{
+			return ptr;
+		}
+		else
+		{
+			throw std::runtime_error("Dereferencing a null pointer.");
+		}
+	}
+
 	explicit operator bool() const
 	{
 		return ptr != nullptr;
 	}
+
 	void Swap(UnqPtr<T> other)
 	{
 		T* temp = ptr;
 		ptr = other.ptr;
 		other.ptr = temp;
 	}
-
 };

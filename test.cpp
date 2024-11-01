@@ -158,8 +158,6 @@ void Test5_OfListSequnceMutable()
 	}
 }
 
-
-
 int main()
 {
 	Test1_OfListSequenceMutable();

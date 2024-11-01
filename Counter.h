@@ -23,7 +23,6 @@ public:
     {
         ++weak_count;
     }
-
     void DecrementWeak() 
     {
         --weak_count;
@@ -32,7 +31,6 @@ public:
     {
         return main_count;
     }
-
     int GetWeak() const 
     {
         return weak_count;
