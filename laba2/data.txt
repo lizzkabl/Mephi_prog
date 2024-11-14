@@ -1,0 +1,5 @@
+John,Doe,1985,180.5,75.3
+Jane,Smith,1990,170.2,65.7
+Alice,Brown,2000,165.8,60.0
+Bob,Johnson,1988,175.4,82.1
+Eve,Williams,1995,160.0,54.2
