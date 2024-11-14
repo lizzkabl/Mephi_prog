@@ -1,7 +1,7 @@
 #pragma once
 #include "Requirements.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ShrdPtr.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ListSequenceMutable.h"
+#include "ShrdPtr.h"
+#include "ListSequenceMutable.h"
 #include <cmath> 
 #include <functional>
 
@@ -14,7 +14,7 @@ class Statistic
 public:
     Statistic() = default;
 
-    T Mean(ShrdPtr<ListSequenceMutable<T>> seq)
+    T Mean(ShrdPtr<MutableSequence<T>> seq)
     {
         T sum = 0;
         int size = seq->GetLength();
@@ -29,7 +29,7 @@ public:
         return sum / size;
     }
 
-    T StandartDeviation(ShrdPtr<ListSequenceMutable<T>> seq, Sqrt<T> sqrt = [](const T& x) { return std::sqrt(x); })
+    T StandartDeviation(ShrdPtr<MutableSequence<T>> seq, Sqrt<T> sqrt = [](const T& x) { return std::sqrt(x); })
     {
         int size = seq->GetLength();
         if (size == 0) {
@@ -48,7 +48,7 @@ public:
         return sqrt(sumOfSquares / size);
     }
 
-    T RootMeanSquare(ShrdPtr<ListSequenceMutable<T>> seq, Sqrt<T> sqrt = [](const T& x) { return std::sqrt(x); })
+    T RootMeanSquare(ShrdPtr<MutableSequence<T>> seq, Sqrt<T> sqrt = [](const T& x) { return std::sqrt(x); })
     {
         int size = seq->GetLength();
         if (size == 0) 

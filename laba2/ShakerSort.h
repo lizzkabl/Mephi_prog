@@ -1,11 +1,10 @@
 ﻿#pragma once
-#include "C:\Users\user\source\repos\WindowsProject1_help\ListSequenceMutable.h"
+#include "ListSequenceMutable.h"
 #include "ISort.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ShrdPtr.h"
+#include "ShrdPtr.h"
 #include <functional>
 
-template <class T>
-using Comparator = std::function<bool(const T&, const T&)>;
+
 
 template <class T>
 class ShakerSort : public ISort<T>
@@ -13,8 +12,8 @@ class ShakerSort : public ISort<T>
 public:
     ShakerSort() = default;
 
-    void Sort(ShrdPtr<ListSequenceMutable<T>> seq,
-        Comparator<T> comp = std::less<T>(), Comparator<T> isEqual = std::equal_to<T>()) override
+    void Sort(ShrdPtr<MutableSequence<T>> seq,
+        Comparator<T> comp = std::less<T>(), Comparator<T> is_equal = std::equal_to<T>()) override
 	{
         size_t size = seq->GetLength();
         if (size <= 1) return;
@@ -44,9 +43,9 @@ public:
         }
     }
 
-    void ShowSort(ShrdPtr<ListSequenceMutable<T>> seq, HWND hWnd,
+    void ShowSort(ShrdPtr<MutableSequence<T>> seq, HWND hWnd,
         Comparator<T> comp = std::less<T>(),
-        Comparator<T> isEqual = std::equal_to<T>()) override
+        Comparator<T> is_equal = std::equal_to<T>()) override
     {
         size_t size = seq->GetLength();
         if (size <= 1) return;  

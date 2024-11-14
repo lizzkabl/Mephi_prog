@@ -1,24 +1,23 @@
 #pragma once
-#include "C:\Users\user\source\repos\WindowsProject1_help\ListSequenceMutable.h"
+#include "ListSequenceMutable.h"
 #include "ISort.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ShrdPtr.h"
+#include "ShrdPtr.h"
 #include <functional>
 
-template <class T>
-using Comparator = std::function<bool(const T&, const T&)>;
+
 
 template <class T>
 class QuickSort : public ISort<T>
 {
 private:
-    int Partition(ShrdPtr<ListSequenceMutable<T>> seq, int low, int high, Comparator<T> comp, Comparator<T> isEqual)
+    int Partition(ShrdPtr<MutableSequence<T>> seq, int low, int high, Comparator<T> comp, Comparator<T> is_equal)
     {
         T pivot = seq->Get(high);
         int i = low - 1;
 
         for (int j = low; j <= high - 1; j++)
         {
-            if (comp(seq->Get(j), pivot) || isEqual(seq->Get(j), pivot))
+            if (comp(seq->Get(j), pivot) || is_equal(seq->Get(j), pivot))
             {
                 i++;
                 seq->Swap(i, j);
@@ -28,17 +27,17 @@ private:
         return i + 1;
     }
 
-    int PartitionShow(ShrdPtr<ListSequenceMutable<T>> seq, int low, int high, HWND hWnd, Comparator<T> comp, Comparator<T> isEqual)
+    int PartitionShow(ShrdPtr<MutableSequence<T>> seq, int low, int high, HWND hWnd, Comparator<T> comp, Comparator<T> is_equal)
     {
         T pivot = seq->Get(high);
         int i = low - 1;
 
         for (int j = low; j <= high - 1; j++)
         {
-            if (comp(seq->Get(j), pivot) || isEqual(seq->Get(j), pivot))
+            if (comp(seq->Get(j), pivot) || is_equal(seq->Get(j), pivot))
             {
                 i++;
-                if (!isEqual(seq->Get(j), seq->Get(i)))
+                if (!is_equal(seq->Get(j), seq->Get(i)))
                 {
                     VisualizeCurrentState(hWnd, seq, i, j);
                     Sleep(1500);
@@ -48,7 +47,7 @@ private:
                 }
             }
         }
-        if (!isEqual(seq->Get(i + 1), seq->Get(high)))
+        if (!is_equal(seq->Get(i + 1), seq->Get(high)))
         {
             VisualizeCurrentState(hWnd, seq, i + 1, high);
             Sleep(1500);
@@ -59,42 +58,42 @@ private:
         return i + 1;
     }
 
-    void QSort(ShrdPtr<ListSequenceMutable<T>> seq, int low, int high, Comparator<T> comp, Comparator<T> isEqual)
+    void QSort(ShrdPtr<MutableSequence<T>> seq, int low, int high, Comparator<T> comp, Comparator<T> is_equal)
     {
         if (low < high)
         {
-            int pi = Partition(seq, low, high, comp, isEqual);
-            QSort(seq, low, pi - 1, comp, isEqual);
-            QSort(seq, pi + 1, high, comp, isEqual);
+            int pi = Partition(seq, low, high, comp, is_equal);
+            QSort(seq, low, pi - 1, comp, is_equal);
+            QSort(seq, pi + 1, high, comp, is_equal);
         }
     }
 
-    void QSortShow(ShrdPtr<ListSequenceMutable<T>> seq, int low, int high, HWND hWnd, Comparator<T> comp, Comparator<T> isEqual)
+    void QSortShow(ShrdPtr<MutableSequence<T>> seq, int low, int high, HWND hWnd, Comparator<T> comp, Comparator<T> is_equal)
     {
         if (low < high)
         {
-            int pi = PartitionShow(seq, low, high, hWnd, comp, isEqual);
-            QSortShow(seq, low, pi - 1, hWnd, comp, isEqual);
-            QSortShow(seq, pi + 1, high, hWnd, comp, isEqual);
+            int pi = PartitionShow(seq, low, high, hWnd, comp, is_equal);
+            QSortShow(seq, low, pi - 1, hWnd, comp, is_equal);
+            QSortShow(seq, pi + 1, high, hWnd, comp, is_equal);
         }
     }
 
 public:
-    void Sort(ShrdPtr<ListSequenceMutable<T>> seq, Comparator<T> comp = std::less<T>(), Comparator<T> isEqual = std::equal_to<T>()) override
+    void Sort(ShrdPtr<MutableSequence<T>> seq, Comparator<T> comp = std::less<T>(), Comparator<T> is_equal = std::equal_to<T>()) override
     {
         size_t size = seq->GetLength();
         if (size != 0)
         {
-            QSort(seq, 0, size - 1, comp, isEqual);
+            QSort(seq, 0, size - 1, comp, is_equal);
         }
     }
 
-    void ShowSort(ShrdPtr<ListSequenceMutable<T>> seq, HWND hWnd, Comparator<T> comp = std::less<T>(), Comparator<T> isEqual = std::equal_to<T>()) override
+    void ShowSort(ShrdPtr<MutableSequence<T>> seq, HWND hWnd, Comparator<T> comp = std::less<T>(), Comparator<T> is_equal = std::equal_to<T>()) override
     {
         size_t size = seq->GetLength();
         if (size != 0)
         {
-            QSortShow(seq, 0, size - 1, hWnd, comp, isEqual);
+            QSortShow(seq, 0, size - 1, hWnd, comp, is_equal);
         }
     }
 };

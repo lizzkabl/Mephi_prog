@@ -1,14 +1,13 @@
 #pragma once
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include <cassert>
 #include <string>
 
 struct Person 
 {
-    std::string firstName;
-    std::string lastName;
+    std::string first_name;
+    std::string last_name;
     int birthYear;
     double height;
     float weight;
@@ -16,8 +15,8 @@ struct Person
 
     friend std::wostream& operator<<(std::wostream& wos, const Person& person) 
     {
-        wos << L"Имя: " << std::wstring(person.firstName.begin(), person.firstName.end())
-            << L", Фамилия: " << std::wstring(person.lastName.begin(), person.lastName.end())
+        wos << L"Имя: " << std::wstring(person.first_name.begin(), person.first_name.end())
+            << L", Фамилия: " << std::wstring(person.last_name.begin(), person.last_name.end())
             << L", Год рождения: " << person.birthYear << L", Рост: " << person.height
             << L", Вес: " << person.weight;
         return wos;
@@ -25,25 +24,25 @@ struct Person
 
 };
 
-std::vector<Person> ReadPersonsFromFile(const std::string& filename)
+ListSequenceMutable<Person> ReadPersonsFromFile(const std::string& filename)
 {
-    std::vector<Person> persons;
+    ListSequenceMutable<Person> persons;
     std::ifstream file(filename);
     std::string line;
 
     while (std::getline(file, line)) 
     {
         std::stringstream ss(line);
-        std::string firstName, lastName;
+        std::string first_name, last_name;
         int birthYear;
         double height;
         float weight;
 
-        std::getline(ss, firstName, ',');
-        std::getline(ss, lastName, ',');
+        std::getline(ss, first_name, ',');
+        std::getline(ss, last_name, ',');
         ss >> birthYear >> height >> weight;
 
-        persons.push_back({ firstName, lastName, birthYear, height, weight });
+        persons.Append({ first_name, last_name, birthYear, height, weight });
     }
 
     return persons;

@@ -30,7 +30,8 @@
 HINSTANCE hInst;
 WCHAR szTitle[MAX_LOADSTRING];
 WCHAR szWindowClass[MAX_LOADSTRING];
-ShrdPtr<ListSequenceMutable<int>> sequence(new ListSequenceMutable<int>());
+
+ShrdPtr<MutableSequence<int>> sequence(new ListSequenceMutable<int>());
 
 
 ATOM MyRegisterClass(HINSTANCE hInstance);
@@ -52,10 +53,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
-    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSPROJECT1HELP));
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_LABA23));
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOWSPROJECT1HELP);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_LABA23);
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
     return RegisterClassExW(&wcex);
@@ -166,7 +167,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 template <typename T>
-void VisualizeCurrentState(HWND hWnd, ShrdPtr<ListSequenceMutable<T>> sequence, int currentIndex1 = -1, int currentIndex2 = -1)
+void VisualizeCurrentState(HWND hWnd, ShrdPtr<MutableSequence<T>> sequence, int currentIndex1 = -1, int currentIndex2 = -1)
 {
     HWND hRichEdit = GetDlgItem(hWnd, IDC_SEQUENCE_DISPLAY);
     SendMessage(hRichEdit, WM_SETTEXT, 0, (LPARAM)L"");
@@ -228,11 +229,11 @@ void EnterElements(HWND hWnd)
     }
     if (!success)
     {
-        MessageBox(hWnd, L"Некорректный ввод данных. Введите целые числа.", L"Ошибка", MB_OK | MB_ICONERROR);
+        MessageBox(hWnd, L"incorrect input data. Please enter integer numbers.", L"Error", MB_OK | MB_ICONERROR);
     }
     else
     {
-        MessageBox(hWnd, L"Элементы добавлены.", L"Успех", MB_OK);
+        MessageBox(hWnd, L"Elements are aded.", L"Sucsess", MB_OK);
     }
 }
 
@@ -268,7 +269,7 @@ void Sort(HWND hWnd)
     }
     break;
     default:
-        MessageBox(hWnd, L"Неизвестный алгоритм сортировки.", L"Ошибка", MB_OK | MB_ICONERROR);
+        MessageBox(hWnd, L"Unknown algorithm", L"Erorr", MB_OK | MB_ICONERROR);
         return;
     }
 
@@ -277,7 +278,7 @@ void Sort(HWND hWnd)
     {
         ss << sequence->Get(i) << L" ";
     }
-    MessageBox(hWnd, ss.str().c_str(), L"Отсортированная последовательность", MB_OK);
+    MessageBox(hWnd, ss.str().c_str(), L"Sequence has been sorted", MB_OK);
 }
 
 void ShowSort(HWND hWnd)
@@ -312,7 +313,7 @@ void ShowSort(HWND hWnd)
     }
     break;
     default:
-        MessageBox(hWnd, L"Неизвестный алгоритм сортировки.", L"Ошибка", MB_OK | MB_ICONERROR);
+        MessageBox(hWnd, L"Unknown algorithm", L"Erorr", MB_OK | MB_ICONERROR);
         return;
     }
 }

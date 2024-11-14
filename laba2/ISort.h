@@ -6,11 +6,11 @@
 //{
 //public: 
 //	virtual void Sort(ShrdPtr<ListSequenceMutable<T>> seq,
-//		Comparator<T> comp = std::less<T>(), Comparator<T> isEqual = std::equal_to<T>(), bool visualize = false, HWND hWnd = nullptr) = 0;
+//		Comparator<T> comp = std::less<T>(), Comparator<T> is_equal = std::equal_to<T>(), bool visualize = false, HWND hWnd = nullptr) = 0;
 //
 //	virtual void ShowSort(ShrdPtr<ListSequenceMutable<T>> seq, HWND hWnd,
 //		Comparator<T> comp = std::less<T>(),
-//		Comparator<T> isEqual = std::equal_to<T>()) = 0;
+//		Comparator<T> is_equal = std::equal_to<T>()) = 0;
 //};
 
 #pragma once
@@ -25,14 +25,13 @@ class ISort
 {
 public:
     virtual void Sort(
-        ShrdPtr<ListSequenceMutable<T>> seq,
+        ShrdPtr<MutableSequence<T>> seq,
         Comparator<T> comp = std::less<T>(),
-        Comparator<T> isEqual = std::equal_to<T>()) = 0;
+        Comparator<T> is_equal = std::equal_to<T>()) = 0;
 
     virtual void ShowSort(
-        ShrdPtr<ListSequenceMutable<T>> seq,
+        ShrdPtr<MutableSequence<T>> seq,
         HWND hWnd,
         Comparator<T> comp = std::less<T>(),
-        Comparator<T> isEqual = std::equal_to<T>()
-    ) = 0;
+        Comparator<T> is_equal = std::equal_to<T>()) = 0;
 };

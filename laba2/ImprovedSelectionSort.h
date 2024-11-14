@@ -1,12 +1,10 @@
 ﻿#pragma once
-#include "C:\Users\user\source\repos\WindowsProject1_help\ListSequenceMutable.h"
+#include "ListSequenceMutable.h"
 #include "ISort.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ShrdPtr.h"
+#include "ShrdPtr.h"
 #include <functional>
 #include "framework.h"
 
-template <class T>
-using Comparator = std::function<bool(const T&, const T&)>;
 
 template <class T>
 class ImprovedSelectionSort : public ISort<T>
@@ -14,9 +12,9 @@ class ImprovedSelectionSort : public ISort<T>
 public:
     ImprovedSelectionSort() = default;
 
-    void Sort(ShrdPtr<ListSequenceMutable<T>> seq,
+    void Sort(ShrdPtr<MutableSequence<T>> seq,
         Comparator<T> comp = std::less<T>(),
-        Comparator<T> isEqual = std::equal_to<T>()) override
+        Comparator<T> is_equal = std::equal_to<T>()) override
     {
         size_t size = seq->GetLength();
         if (size != 0)
@@ -43,7 +41,7 @@ public:
                 }
                 seq->Swap(i, min_i);
 
-                if (isEqual(seq->Get(min_i), max))
+                if (is_equal(seq->Get(min_i), max))
                 {
                     seq->Swap(j, min_i);
                 }
@@ -55,9 +53,9 @@ public:
         }
     }
 
-    void ShowSort(ShrdPtr<ListSequenceMutable<T>> seq, HWND hWnd,
+    void ShowSort(ShrdPtr<MutableSequence<T>> seq, HWND hWnd,
         Comparator<T> comp = std::less<T>(),
-        Comparator<T> isEqual = std::equal_to<T>()) override
+        Comparator<T> is_equal = std::equal_to<T>()) override
     {
         size_t size = seq->GetLength();
         if (size != 0)
@@ -92,9 +90,9 @@ public:
                     Sleep(1500);
                 }
 
-                if (isEqual(seq->Get(min_i), max))
+                if (is_equal(seq->Get(min_i), max))
                 {
-                    if (!isEqual(seq->Get(j), seq->Get(min_i)))
+                    if (!is_equal(seq->Get(j), seq->Get(min_i)))
                     {
                         VisualizeCurrentState(hWnd, seq, j, min_i);
                         Sleep(1500);
@@ -105,7 +103,7 @@ public:
                 }
                 else
                 {
-                    if (!isEqual(seq->Get(j), seq->Get(max_i)))
+                    if (!is_equal(seq->Get(j), seq->Get(max_i)))
                     {
                         VisualizeCurrentState(hWnd, seq, j, max_i);
                         Sleep(1500);

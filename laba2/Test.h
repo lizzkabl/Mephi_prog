@@ -6,8 +6,8 @@
 #include "ShakerSort.h"
 #include "ImprovedSelectionSort.h"
 #include "QuickSort.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ShrdPtr.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\ListSequenceMutable.h"
+#include "ShrdPtr.h"
+#include "ListSequenceMutable.h"
 #include <cassert>
 #include <string>
 #include "Person.h"
@@ -16,8 +16,7 @@
 void BubbleTestSortingByHeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
-
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
     BubleSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.height < b.height; },
         [](const Person& a, const Person& b) { return a.height == b.height; });
@@ -31,37 +30,37 @@ void BubbleTestSortingByHeight()
 void BubbleTestSortingByFirstName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     BubleSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.firstName < b.firstName; },
-        [](const Person& a, const Person& b) { return a.firstName == b.firstName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.first_name < b.first_name; },
+        [](const Person& a, const Person& b) { return a.first_name == b.first_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).firstName <= seq->Get(i).firstName && "Сортировка по имени выполнена некорректно");
+        assert(seq->Get(i - 1).first_name <= seq->Get(i).first_name && "Сортировка по имени выполнена некорректно");
     }
 }
 
 void BubbleTestSortingByLastName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     BubleSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.lastName < b.lastName; },
-        [](const Person& a, const Person& b) { return a.lastName == b.lastName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.last_name < b.last_name; },
+        [](const Person& a, const Person& b) { return a.last_name == b.last_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).lastName <= seq->Get(i).lastName && "Сортировка по фамилии выполнена некорректно");
+        assert(seq->Get(i - 1).last_name <= seq->Get(i).last_name && "Сортировка по фамилии выполнена некорректно");
     }
 }
 
 void BubbleTestSortingByBirthYear()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     BubleSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.birthYear < b.birthYear; },
@@ -76,7 +75,7 @@ void BubbleTestSortingByBirthYear()
 void BubbleTestSortingByWeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     BubleSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.weight < b.weight; },
@@ -93,7 +92,7 @@ void BubbleTestSortingByWeight()
 void ISelectTestSortingByHeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ImprovedSelectionSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.height < b.height; },
@@ -108,37 +107,37 @@ void ISelectTestSortingByHeight()
 void ISelectTestSortingByFirstName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ImprovedSelectionSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.firstName < b.firstName; },
-        [](const Person& a, const Person& b) { return a.firstName == b.firstName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.first_name < b.first_name; },
+        [](const Person& a, const Person& b) { return a.first_name == b.first_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).firstName <= seq->Get(i).firstName && "Сортировка по имени выполнена некорректно");
+        assert(seq->Get(i - 1).first_name <= seq->Get(i).first_name && "Сортировка по имени выполнена некорректно");
     }
 }
 
 void ISelectTestSortingByLastName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ImprovedSelectionSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.lastName < b.lastName; },
-        [](const Person& a, const Person& b) { return a.lastName == b.lastName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.last_name < b.last_name; },
+        [](const Person& a, const Person& b) { return a.last_name == b.last_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).lastName <= seq->Get(i).lastName && "Сортировка по фамилии выполнена некорректно");
+        assert(seq->Get(i - 1).last_name <= seq->Get(i).last_name && "Сортировка по фамилии выполнена некорректно");
     }
 }
 
 void ISelectTestSortingByBirthYear()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ImprovedSelectionSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.birthYear < b.birthYear; },
@@ -153,7 +152,7 @@ void ISelectTestSortingByBirthYear()
 void ISelectTestSortingByWeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ImprovedSelectionSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.weight < b.weight; },
@@ -170,7 +169,7 @@ void ISelectTestSortingByWeight()
 void QuickTestSortingByHeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     QuickSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.height < b.height; },
@@ -185,37 +184,37 @@ void QuickTestSortingByHeight()
 void QuickTestSortingByFirstName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     QuickSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.firstName < b.firstName; },
-        [](const Person& a, const Person& b) { return a.firstName == b.firstName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.first_name < b.first_name; },
+        [](const Person& a, const Person& b) { return a.first_name == b.first_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).firstName <= seq->Get(i).firstName && "Сортировка по имени выполнена некорректно");
+        assert(seq->Get(i - 1).first_name <= seq->Get(i).first_name && "Сортировка по имени выполнена некорректно");
     }
 }
 
 void QuickTestSortingByLastName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     QuickSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.lastName < b.lastName; },
-        [](const Person& a, const Person& b) { return a.lastName == b.lastName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.last_name < b.last_name; },
+        [](const Person& a, const Person& b) { return a.last_name == b.last_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).lastName <= seq->Get(i).lastName && "Сортировка по фамилии выполнена некорректно");
+        assert(seq->Get(i - 1).last_name <= seq->Get(i).last_name && "Сортировка по фамилии выполнена некорректно");
     }
 }
 
 void QuickTestSortingByBirthYear()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     QuickSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.birthYear < b.birthYear; },
@@ -230,7 +229,7 @@ void QuickTestSortingByBirthYear()
 void QuickTestSortingByWeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     QuickSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.weight < b.weight; },
@@ -246,7 +245,7 @@ void QuickTestSortingByWeight()
 void ShakerTestSortingByHeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ShakerSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.height < b.height; },
@@ -261,37 +260,37 @@ void ShakerTestSortingByHeight()
 void ShakerTestSortingByFirstName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ShakerSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.firstName < b.firstName; },
-        [](const Person& a, const Person& b) { return a.firstName == b.firstName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.first_name < b.first_name; },
+        [](const Person& a, const Person& b) { return a.first_name == b.first_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).firstName <= seq->Get(i).firstName && "Сортировка по имени выполнена некорректно");
+        assert(seq->Get(i - 1).first_name <= seq->Get(i).first_name && "Сортировка по имени выполнена некорректно");
     }
 }
 
 void ShakerTestSortingByLastName()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ShakerSort<Person> sorter;
-    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.lastName < b.lastName; },
-        [](const Person& a, const Person& b) { return a.lastName == b.lastName; });
+    sorter.Sort(seq, [](const Person& a, const Person& b) { return a.last_name < b.last_name; },
+        [](const Person& a, const Person& b) { return a.last_name == b.last_name; });
 
     for (int i = 1; i < seq->GetLength(); ++i)
     {
-        assert(seq->Get(i - 1).lastName <= seq->Get(i).lastName && "Сортировка по фамилии выполнена некорректно");
+        assert(seq->Get(i - 1).last_name <= seq->Get(i).last_name && "Сортировка по фамилии выполнена некорректно");
     }
 }
 
 void ShakerTestSortingByBirthYear()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ShakerSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.birthYear < b.birthYear; },
@@ -306,7 +305,7 @@ void ShakerTestSortingByBirthYear()
 void ShakerTestSortingByWeight()
 {
     auto persons = ReadPersonsFromFile("data.txt");
-    ShrdPtr<ListSequenceMutable<Person>> seq(new ListSequenceMutable<Person>(persons));
+    ShrdPtr<MutableSequence<Person>> seq(new ListSequenceMutable<Person>(persons));
 
     ShakerSort<Person> sorter;
     sorter.Sort(seq, [](const Person& a, const Person& b) { return a.weight < b.weight; },

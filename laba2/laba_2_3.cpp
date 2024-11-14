@@ -1,5 +1,5 @@
-﻿#include "C:\Users\user\source\repos\WindowsProject1_help\WindowsProject1_help.h"
-#include "C:\Users\user\source\repos\WindowsProject1_help\LinkedList.h"
+﻿#include"laba_2_3.h"
+#include "LinkedList.h"
 #include "Test.h"
 #include "Interface.h"
 #include <sstream>
@@ -22,7 +22,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         PostQuitMessage(0);
     }
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_WINDOWSPROJECT1HELP, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_LABA23, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     if (!InitInstance(hInstance, nCmdShow))
@@ -30,7 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWSPROJECT1HELP));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LABA23));
     MSG msg;
 
     while (GetMessage(&msg, nullptr, 0, 0))
