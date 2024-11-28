@@ -59,13 +59,37 @@ public:
 		return data.GetLast();
 	}
 
+	void Clear()
+	{
+		data.Clear();
+	}
+
+	void Swap(int i, int j)
+	{
+		data.Swap(i, j);
+	}
+
 	int IndexOf(T element) const override  
 	{
-		for (int i = 0; i < data.GetLength(); i++)
+		int left = 0;
+		int right = data.GetLength() - 1;
+
+		while (left <= right)
 		{
-			if (data.Get(i) == element)
+			int mid = left + (right - left) / 2;
+
+			if (is_equal(element, data.Get(mid)))
 			{
-				return i;
+				return true;
+			}
+
+			if (comp(element, data.Get(mid)))
+			{
+				right = mid - 1;
+			}
+			else
+			{
+				left = mid + 1;
 			}
 		}
 		throw  "ElementOutOfRange";
@@ -98,26 +122,10 @@ public:
 
 	bool BinarySearch(T element) const
 	{
-		int left = 0;
-		int right = data.GetLength() - 1;
-
-		while (left <= right)
+		try
 		{
-			int mid = left + (right - left) / 2;
-
-			if (is_equal(element, data.Get(mid)))
-			{
-				return true; 
-			}
-
-			if (comp(element, data.Get(mid)))
-			{
-				right = mid - 1;
-			}
-			else
-			{
-				left = mid + 1; 
-			}
+			IndexOf(element);
+			return true;
 		}
 		return false; 
 	}
@@ -138,13 +146,5 @@ public:
 		return true;
 	}
 
-	void Clear()
-	{
-		data.Clear();
-	}
 
-	void Swap(int i, int j)
-	{
-		data.Swap(i, j);
-	}
 };
