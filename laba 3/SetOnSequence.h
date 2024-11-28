@@ -87,7 +87,7 @@ public:
 		return data.GetLength();
 	}
 
-	bool Contains(T element) override
+	bool Contains(T element) const override
 	{
 		for (int i = 0; i < data.GetLength(); i++)
 		{

@@ -73,7 +73,8 @@ public:
 
 	SortedSequenceOnSequence<T>* GetSubsequence(int start_index, int end_index) const override
 	{
-		return new SortedSequenceOnSequence(*(data.GetSubsequence(start_index, end_index)));
+		ArraySequenceMutable<T>* subsequence = data.GetSubsequence(start_index, end_index);
+		return new SortedSequenceOnSequence<T>(*subsequence);
 	}
 
 	void Add(T element) override
@@ -94,8 +95,6 @@ public:
 		}
 		data.Append(element);
 	}
-
-
 
 	bool BinarySearch(T element) const
 	{
@@ -139,11 +138,11 @@ public:
 		return true;
 	}
 
-
 	void Clear()
 	{
 		data.Clear();
 	}
+
 	void Swap(int i, int j)
 	{
 		data.Swap(i, j);

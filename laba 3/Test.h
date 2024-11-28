@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include "SetOnSequence.h"
+#include "SetOnBinaryTree.h"
 #include "SortedSequenceOnSequence.h" 
 #include "DictionaryOnSequence.h" 
 #include "BinaryTree.h"
@@ -62,6 +63,69 @@ void Test_SetOnSequence_SubSet()
     set2.Insert(1);
 
     assert(set1.SubSet(&set2) == true); 
+    set2.Insert(3);
+
+    assert(set2.SubSet(&set1) == false); 
+}
+
+
+void Test_SetOnBinaryTree_InsertAndContains()
+{
+    SetOnBinaryTree<int> set;
+    set.Insert(5);
+    set.Insert(3);
+    set.Insert(8);
+
+    assert(set.Contains(5) == true);
+    assert(set.Contains(3) == true);
+    assert(set.Contains(8) == true);
+    assert(set.Contains(10) == false);
+}
+
+void Test_SetOnBinaryTree_Empty()
+{
+    SetOnBinaryTree<int> set;
+    assert(set.Empty() == true);
+    set.Insert(1);
+    assert(set.Empty() == false);
+}
+
+void Test_SetOnBinaryTree_Get()
+{
+    SetOnBinaryTree<int> set;
+    set.Insert(1);
+    set.Insert(2);
+    set.Insert(3);
+
+    assert(set.Get(1) == 2);
+    assert(set.Get(2) == 1); 
+    assert(set.Get(3) == 3);  
+}
+
+void Test_SetOnBinaryTree_Pop()
+{
+    SetOnBinaryTree<int> set;
+    set.Insert(1);
+    set.Insert(2);
+    set.Insert(3);
+
+    set.Pop(2);
+
+    assert(set.Contains(2) == false);
+}
+
+void Test_SetOnBinaryTree_SubSet()
+{
+    SetOnBinaryTree<int> set1;
+    SetOnBinaryTree<int> set2;
+
+    set1.Insert(1);
+    set1.Insert(2);
+
+    set2.Insert(1);
+
+    assert(set1.SubSet(&set2) == true);
+
     set2.Insert(3);
 
     assert(set2.SubSet(&set1) == false); 
@@ -201,20 +265,6 @@ void Test_DictionaryOnSequence_Remove()
 }
 
 
-
-
-void Test_BinaryTree_Insert()
-{
-    BinaryTree<int> tree;
-    tree.Insert(10);
-    tree.Insert(5);
-    tree.Insert(15);
-
-    assert(tree.Search(10) != nullptr); 
-    assert(tree.Search(5) != nullptr);  
-    assert(tree.Search(15) != nullptr); 
-}
-
 void Test_BinaryTree_DeleteNode()
 {
     BinaryTree<int> tree;
@@ -225,9 +275,24 @@ void Test_BinaryTree_DeleteNode()
     tree.DeleteNode(5);
 
     tree.DeleteNode(10);
-    assert(tree.Search(15) != nullptr);
+    assert(tree.Search(15) == 15);
 }
 
+void Test_BinaryTree_Get()
+{
+    BinaryTree<int> tree;
+    tree.Insert(10);
+    tree.Insert(5);
+    tree.Insert(15);
+    tree.Insert(3);
+    tree.Insert(7);
+
+    assert(tree.Get(1) == 10);  
+    assert(tree.Get(2) == 5); 
+    assert(tree.Get(4) == 3);  
+    assert(tree.Get(3) == 15); 
+    assert(tree.Get(5) == 7);
+}
 
 void Test_Histogram_Create() 
 {
@@ -289,6 +354,12 @@ void RunAllTests()
     Test_SetOnSequence_Pop();
     Test_SetOnSequence_SubSet();
 
+    Test_SetOnBinaryTree_InsertAndContains();
+    Test_SetOnBinaryTree_Empty();
+    Test_SetOnBinaryTree_Get();
+    Test_SetOnBinaryTree_Pop();
+    Test_SetOnBinaryTree_SubSet();
+
     Test_SortedSequenceOnSequence_Constructor();
     Test_SortedSequenceOnSequence_AddElements();
     Test_SortedSequenceOnSequence_GetFirstAndLast();
@@ -302,8 +373,9 @@ void RunAllTests()
     Test_DictionaryOnSequence_ContainsKey();
     Test_DictionaryOnSequence_Remove();
 
-    Test_BinaryTree_Insert();
     Test_BinaryTree_DeleteNode();
+    Test_BinaryTree_Get();
+
 
     Test_Histogram_Create();
     Test_Histogram_CreateSingleElement();

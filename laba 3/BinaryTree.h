@@ -93,12 +93,9 @@ private:
 				delete node;
 				return temp;
 			}
-
-			TreeNode<T>* temp = MinValueNode(node->right);
-			node->data = temp->data;
-			node->right = DeleteNode(node->right, temp->data);
+			node->data = MinValueNode(node->right)->data;
+			node->right = DeleteNode(node->right, MinValueNode(node->right)->data);
 		}
-
 		UpdateHeight(node);
 		return BalanceNode(node);
 	}
@@ -186,6 +183,31 @@ private:
 		return BalanceNode(node);
 	}
 
+	T GetElementAtIndex(TreeNode<T>* node, int index, int current = 1) const
+	{
+		if (!node)
+		{
+			throw std::out_of_range("Index is out of range.");
+		}
+
+		if (index == current)
+		{
+			return node->data;
+		}
+		if (node->left)
+		{
+			try
+			{
+				return GetElementAtIndex(node->left, index, current * 2);
+			}
+			catch (const std::out_of_range&){}
+		}
+		if (node->right)
+		{
+			return GetElementAtIndex(node->right, index, current * 2 + 1);
+		}
+		throw std::out_of_range("Index is out of range.");
+	}
 
 	TreeNode<T>* InsertNode(TreeNode<T>* node, const T& value)
 	{
@@ -210,6 +232,18 @@ private:
 
 		return BalanceNode(node);
 	}
+
+	int GetLength(TreeNode<T>* node) const 
+	{
+		if (node == nullptr) 
+		{
+			return 0;  
+		}
+		int leftLength = GetLength(node->left);
+		int rightLength = GetLength(node->right);
+
+		return 1 + leftLength + rightLength;
+	}
 public:
 
 	~BinaryTree()
@@ -229,14 +263,18 @@ public:
 		}
 	}
 
-
 	BinaryTree(const TreeNode<T>& other) : root(new TreeNode<T>(other)), is_equal{ std::equal_to<T>() }, comp{ std::less<T>() } {}
 
 	BinaryTree(const BinaryTree<T>& other) : root{ new TreeNode<T>(*other.root) }, is_equal{ std::equal_to<T>() }, comp{ std::less<T>() } {}
 
-	TreeNode<T>* Search(const T& val) const
+	T Search(const T& val) const
 	{
-		return Search(root, val);
+		TreeNode<T>* node = Search(root, val);
+		if (node == nullptr)
+		{
+			throw std::runtime_error("Key not found");
+		}
+		return node->data;
 	}
 
 	void DeleteNode(const T& val)
@@ -281,5 +319,18 @@ public:
 		return GetHeight(root);
 	}
 
+	T Get(int index) const 
+	{
+		if (index < 1)
+		{
+			throw std::out_of_range("Index must be greater than 0");
+		}
+		return GetElementAtIndex(root, index, 1);
+	}
+
+	int GetLength() const 
+	{
+		return GetLength(root);
+	}
 };
 
