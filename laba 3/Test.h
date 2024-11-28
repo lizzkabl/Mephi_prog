@@ -131,7 +131,7 @@ void Test_SortedSequenceOnSequence_GetSubsequence()
     assert(subseq->Get(1) == 5);
     assert(subseq->Get(2) == 8);
 
-    delete subseq; // Освобождение памяти
+    delete subseq; 
 }
 
 void Test_SortedSequenceOnSequence_BinarySearch() {
@@ -142,17 +142,17 @@ void Test_SortedSequenceOnSequence_BinarySearch() {
     sortedSeq.Add(1);
 
     assert(sortedSeq.BinarySearch(5) == true);
-    assert(sortedSeq.BinarySearch(2) == false); // Элемента нет в последовательности
+    assert(sortedSeq.BinarySearch(2) == false); 
 }
 
 void Test_SortedSequenceOnSequence_IsEmpty() {
     SortedSequenceOnSequence<int> sortedSeq;
 
-    assert(sortedSeq.IsEmpty() == true); // Пустая последовательность
+    assert(sortedSeq.IsEmpty() == true); 
 
     sortedSeq.Add(1);
 
-    assert(sortedSeq.IsEmpty() == false); // Не пустая после добавления элемента
+    assert(sortedSeq.IsEmpty() == false); 
 }
 
 
