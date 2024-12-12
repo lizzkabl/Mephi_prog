@@ -90,15 +90,20 @@ public:
         }
     }
 
-    T FindShortestDistance(int start_id, int end_id) const override
+    std::pair<T, std::vector<int>> FindShortestPath(int start_id, int end_id) const override
     {
-        const int maxi = 2147483647;
+        const T maxi = std::numeric_limits<T>::max();
+
         if (!vertices.ContainsKey(start_id) || !vertices.ContainsKey(end_id))
         {
             throw std::runtime_error("One or both vertices not found");
         }
 
         DictionaryOnSequence<int, T> distances;
+
+        DictionaryOnSequence<int, int> predecessors;
+
+
         for (int i = 0; i < vertices.GetCount(); ++i)
         {
             distances.Add(i + 1, maxi);
@@ -111,6 +116,8 @@ public:
         {
             int current_id = -1;
             T min_distance = maxi;
+
+            // ¬ыбираем вершину с минимальным рассто€нием
             for (int i = 0; i < distances.GetCount(); ++i)
             {
                 int vertex_id = distances.GetKeyAtIndex(i);
@@ -132,19 +139,32 @@ public:
             {
                 break;
             }
+
             Vertex<T>* current_vertex = vertices.Get(current_id);
             const DictionaryOnSequence<int, T>& outgoings = current_vertex->GetOutgoings();
+
 
             for (int i = 0; i < outgoings.GetCount(); ++i)
             {
                 int neighbor_id = outgoings.GetKeyAtIndex(i);
                 T weight = outgoings.Get(neighbor_id);
 
+
                 if (distances.Get(current_id) + weight < distances.Get(neighbor_id))
                 {
                     distances.Set(neighbor_id, distances.Get(current_id) + weight);
+
+                    if (!predecessors.ContainsKey(neighbor_id))
+                    {
+                        predecessors.Add(neighbor_id, current_id);
+                    }
+                    else
+                    {
+                        predecessors.Set(neighbor_id, current_id);
+                    }
                 }
             }
+
         }
 
         T result = distances.Get(end_id);
@@ -152,6 +172,19 @@ public:
         {
             throw std::runtime_error("No path found");
         }
-        return result;
+
+
+        std::vector<int> path;
+        int current = end_id;
+        while (current != start_id)
+        {
+            path.push_back(current);
+            current = predecessors.Get(current);
+        }
+        path.push_back(start_id);
+
+        std::reverse(path.begin(), path.end());
+
+        return { result, path };
     }
 };

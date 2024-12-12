@@ -14,5 +14,5 @@ class IGraph
 
 	virtual void ColorGraph() = 0;
 
-	virtual T FindShortestDistance(int start_id, int end_id) const = 0;
+	virtual std::pair<T, std::vector<int>> FindShortestPath(int start_id, int end_id) const = 0;
 };

@@ -30,9 +30,34 @@ private:
         }
     }
 
+    T GetFirst() const override
+    {
+        if (size == 0)
+        {
+            throw std::out_of_range("Queue is empty");
+        }
+        return elements[0].value;
+    }
 
+    T GetLast() const override
+    {
+        if (size == 0)
+        {
+            throw std::out_of_range("Queue is empty");
+        }
+        return elements[size - 1].value;
+    }
 
-    void SiftUp(int index)
+    T Get(int index) const override
+    {
+        if (index < 0 || index >= size)
+        {
+            throw std::out_of_range("Index out of range");
+        }
+        return elements[index].value;
+    }
+
+    void ShiftUp(int index)
     {
         while (index > 0 && elements[index].priority < elements[(index - 1) / 2].priority)
         {
@@ -41,7 +66,7 @@ private:
         }
     }
 
-    void SiftDown(int index)
+    void ShiftDown(int index)
     {
         int min_ind = index;
         int left_child = 2 * index + 1;
@@ -60,11 +85,28 @@ private:
         if (index != min_ind)
         {
             Swap(index, min_ind);
-            SiftDown(min_ind);
+            ShiftDown(min_ind);
         }
     }
 
+    void Append(const T& item) override
+    {
+        Enqueue(item, K());
+    }
 
+    void Prepend(const T& item) override
+    {
+        Enqueue(item, K());
+    }
+
+    void InsertAt(const T& item, int index) override
+    {
+        if (index < 0 || index >= size)
+        {
+            throw std::invalid_argument("Invalid index");
+        }
+        Enqueue(item, K());
+    }
 
 public:
     PriorityQueue(int init_capacity = 10) : size(0), capacity(init_capacity)
@@ -93,40 +135,13 @@ public:
 
         for (int i = (size / 2) - 1; i >= 0; --i)
         {
-            SiftDown(i);
+            ShiftDown(i);
         }
     }
 
     ~PriorityQueue()
     {
         delete[] elements;
-    }
-
-    T GetFirst() const override
-    {
-        if (size == 0)
-        {
-            throw std::out_of_range("Queue is empty");
-        }
-        return elements[0].value;
-    }
-
-    T GetLast() const override
-    {
-        if (size == 0)
-        {
-            throw std::out_of_range("Queue is empty");
-        }
-        return elements[size - 1].value;
-    }
-
-    T Get(int index) const
-    {
-        if (index < 0 || index >= size)
-        {
-            throw std::out_of_range("Index out of range");
-        }
-        return elements[index].value;
     }
 
     MutableSequence<T>* GetSubsequence(const int startIndex, const int endIndex) const override
@@ -187,7 +202,7 @@ public:
         elements[size].value = item;
         elements[size].priority = priority;
         ++size;
-        SiftUp(size - 1);
+        ShiftUp(size - 1);
     }
 
     T Dequeue()
@@ -199,26 +214,7 @@ public:
         T result = elements[0].value;
         elements[0] = elements[size - 1];
         --size;
-        SiftDown(0);
+        ShiftDown(0);
         return result;
-    }
-
-    void Append(const T& item) override
-    {
-        Enqueue(item, K());
-    }
-
-    void Prepend(const T& item) override
-    {
-        Enqueue(item, K());
-    }
-
-    void InsertAt(const T& item, int index) override
-    {
-        if (index < 0 || index >= size)
-        {
-            throw std::invalid_argument("Invalid index");
-        }
-        Enqueue(item, K());
     }
 };
