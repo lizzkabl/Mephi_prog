@@ -116,7 +116,6 @@ public:
             int current_id = -1;
             T min_distance = maxi;
 
-            // ¬ыбираем вершину с минимальным рассто€нием
             for (int i = 0; i < distances.GetCount(); ++i)
             {
                 int vertex_id = distances.GetKeyAtIndex(i);
