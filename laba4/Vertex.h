@@ -21,7 +21,7 @@ public:
     }
 
     void AddEdge(int out, T weight)
-    {
+    { 
         outgoings.Add(out, weight);
     }
 

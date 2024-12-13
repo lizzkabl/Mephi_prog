@@ -38,6 +38,10 @@ public:
 
     void AddEdge(int from_id, int to_id, T weight) override
     {
+        if (from_id > GetVertexCount() || to_id > GetVertexCount())
+        {
+            throw "Id out of range";
+        }
         vertices.Get(from_id)->AddEdge(to_id, weight);
     }
 
@@ -91,7 +95,7 @@ public:
 
     std::pair<T, std::vector<int>> FindShortestPath(int start_id, int end_id) const override
     {
-        const T maxi = std::numeric_limits<T>::max(); 
+        const T maxi = 1000; 
 
         if (!vertices.ContainsKey(start_id) || !vertices.ContainsKey(end_id))
         {

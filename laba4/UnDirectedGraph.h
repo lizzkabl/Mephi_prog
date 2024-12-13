@@ -92,7 +92,7 @@ public:
 
     std::pair<T, std::vector<int>> FindShortestPath(int start_id, int end_id) const override
     {
-        const T maxi = std::numeric_limits<T>::max();
+        const T maxi = 1000;
 
         if (!vertices.ContainsKey(start_id) || !vertices.ContainsKey(end_id))
         {

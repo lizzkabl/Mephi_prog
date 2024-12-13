@@ -134,57 +134,78 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             int fromId, toId, weight;
 
             GetWindowText(editFromVertex, buffer, 10);
-            fromId = _wtoi(buffer);
+            if (swscanf_s(buffer, L"%d", &fromId) != 1 || fromId <= 0) 
+            {
+                MessageBox(hwnd, L"Invalid input for 'From Vertex'. Please enter a positive integer.", L"Input Error", MB_OK | MB_ICONERROR);
+                break;
+            }
 
             GetWindowText(editToVertex, buffer, 10);
-            toId = _wtoi(buffer);
+            if (swscanf_s(buffer, L"%d", &toId) != 1 || toId <= 0) 
+            {
+                MessageBox(hwnd, L"Invalid input for 'To Vertex'. Please enter a positive integer.", L"Input Error", MB_OK | MB_ICONERROR);
+                break;
+            }
 
             GetWindowText(editWeight, buffer, 10);
-            weight = _wtoi(buffer);
+            if (swscanf_s(buffer, L"%d", &weight) != 1 || weight < 0) {
+                MessageBox(hwnd, L"Invalid input for 'Weight'. Please enter a non-negative integer.", L"Input Error", MB_OK | MB_ICONERROR);
+                break;
+            }
 
-            try
-            {
+            try {
                 graph.AddEdge(fromId, toId, weight);
             }
-            catch (const std::exception& e)
+            catch (...) 
             {
-                MessageBoxA(hwnd, e.what(), "Error", MB_OK | MB_ICONERROR);
+                MessageBoxA(hwnd,"something wrong", "Error", MB_OK | MB_ICONERROR);
             }
             break;
         }
+
         case BUTTON_SHORT_DIST:
         {
             wchar_t buffer[10];
             int fromId, toId;
 
             GetWindowText(editFrom, buffer, 10);
-            fromId = _wtoi(buffer);
+            if (swscanf_s(buffer, L"%d", &fromId) != 1 || fromId <= 0) {
+                MessageBox(hwnd, L"Invalid input for 'From Vertex'. Please enter a positive integer.", L"Input Error", MB_OK | MB_ICONERROR);
+                break;
+            }
 
             GetWindowText(editTo, buffer, 10);
-            toId = _wtoi(buffer);
+            if (swscanf_s(buffer, L"%d", &toId) != 1 || toId <= 0) {
+                MessageBox(hwnd, L"Invalid input for 'To Vertex'. Please enter a positive integer.", L"Input Error", MB_OK | MB_ICONERROR);
+                break;
+            }
 
-            try
-            {
-                int distance = graph.FindShortestDistance(fromId, toId);
+            try {
+                auto result = graph.FindShortestPath(fromId, toId);
+                int distance = result.first;
+                const std::vector<int>& path = result.second;
 
-                if (distance == -1) 
-                {
+                if (distance == -1) {
                     MessageBox(hwnd, L"No path found between these vertices", L"Error", MB_OK | MB_ICONERROR);
                 }
-                else
-                {
-                    wchar_t resultMessage[50];
-                    swprintf(resultMessage, 50, L"Shortest distance: %d", distance);
+                else {
+                    wchar_t resultMessage[500];
+                    swprintf(resultMessage, 500, L"Shortest distance: %d\nPath: ", distance);
+
+                    for (size_t i = 0; i < path.size(); ++i) {
+                        if (i > 0) swprintf(resultMessage + wcslen(resultMessage), 500 - wcslen(resultMessage), L" -> ");
+                        swprintf(resultMessage + wcslen(resultMessage), 500 - wcslen(resultMessage), L"%d", path[i]);
+                    }
+
                     MessageBox(hwnd, resultMessage, L"Result", MB_OK | MB_ICONINFORMATION);
                 }
             }
-            catch (const std::exception& e)
-            {
+            catch (const std::exception& e) {
                 MessageBoxA(hwnd, e.what(), "Error", MB_OK | MB_ICONERROR);
             }
-
             break;
         }
+
 
 
 

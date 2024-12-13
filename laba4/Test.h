@@ -2,7 +2,6 @@
 #include "PriorityQueue.h"
 #include <assert.h>
 #include "DirectedGraph.h"
-
 #include "UnDirectedGraph.h"
 
 void Test_UnDirectedGraph_AddVertex()
@@ -60,60 +59,56 @@ void Test_UnDirectedGraph_GetVertex_Exception()
     }
 }
 
-void Test_UnDirectedGraph_ColorGraph()
+
+void Test_UnDirectedGraph_FindShortestPath_Simple()
 {
     UnDirectedGraph<int> graph;
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
 
-    graph.AddEdge(1, 2);
-    graph.AddEdge(2, 3);
+    graph.AddEdge(1, 2, 5);
+    graph.AddEdge(2, 3, 3);
 
-    graph.ColorGraph();
-
-
-    Vertex<int>* v1 = graph.GetVertex(1);
-    Vertex<int>* v2 = graph.GetVertex(2);
-    Vertex<int>* v3 = graph.GetVertex(3);
-
-    assert(v1->GetColor() != v2->GetColor());
-    assert(v2->GetColor() != v3->GetColor());
-    assert(v1->GetColor() != v3->GetColor());
+    auto result = graph.FindShortestPath(1, 3);
+    assert(result.first == 8);
+    assert(result.second == std::vector<int>({ 1, 2, 3 }));
 }
 
-void Test_UnDirectedGraph_FindShortestDistance()
+void Test_UnDirectedGraph_FindShortestPath_MultiplePaths()
 {
     UnDirectedGraph<int> graph;
     graph.AddVertex();
     graph.AddVertex();
     graph.AddVertex();
+    graph.AddVertex();
 
-    graph.AddEdge(1, 2, 10);
-    graph.AddEdge(2, 3, 5);
+    graph.AddEdge(1, 2, 1);
+    graph.AddEdge(2, 4, 4);
+    graph.AddEdge(1, 3, 2);
+    graph.AddEdge(3, 4, 2);
 
-    int distance = graph.FindShortestDistance(1, 3);
-    assert(distance == 15);  
+    auto result = graph.FindShortestPath(1, 4);
+    assert(result.first == 4);
+    assert(result.second == std::vector<int>({ 1, 3, 4 }));
 }
 
-void Test_UnDirectedGraph_FindShortestDistance_Exception()
+void Test_UnDirectedGraph_FindShortestPath_NoPath()
 {
     UnDirectedGraph<int> graph;
     graph.AddVertex();
     graph.AddVertex();
-    graph.AddEdge(1, 2, 10);
 
     try
     {
-        graph.FindShortestDistance(1, 3);
-        assert(false);  
+        graph.FindShortestPath(1, 2);
+        assert(false);
     }
     catch (const std::runtime_error& e)
     {
-        assert(true);  
+        assert(std::string(e.what()) == "No path found");
     }
 }
-
 
 
 void Test_DirectedGraph_AddVertex()
@@ -169,38 +164,58 @@ void Test_DirectedGraph_GetVertex_Exception()
     }
 }
 
-
-void Test_DirectedGraph_FindShortestDistance()
+void Test_DirectedGraph_FindShortestPath_Simple()
 {
     DirectedGraph<int> graph;
-    graph.AddVertex();
-    graph.AddVertex();
-    graph.AddVertex();
+    graph.AddVertex(); 
+    graph.AddVertex(); 
+    graph.AddVertex(); 
 
-    graph.AddEdge(1, 2, 10);
-    graph.AddEdge(2, 3, 5);
+    graph.AddEdge(1, 2, 5);
+    graph.AddEdge(2, 3, 3);
 
-    int distance = graph.FindShortestDistance(1, 3);
-    assert(distance == 15); 
+    auto result = graph.FindShortestPath(1, 3);
+    assert(result.first == 8); 
+    assert(result.second == std::vector<int>({ 1, 2, 3 })); 
 }
 
-void Test_DirectedGraph_FindShortestDistance_Exception()
+void Test_DirectedGraph_FindShortestPath_MultiplePaths()
 {
     DirectedGraph<int> graph;
+    graph.AddVertex(); 
     graph.AddVertex();
     graph.AddVertex();
-    graph.AddEdge(1, 2, 10);
+    graph.AddVertex();
+
+    graph.AddEdge(1, 2, 1);
+    graph.AddEdge(2, 4, 4);
+    graph.AddEdge(1, 3, 2);
+    graph.AddEdge(3, 4, 2);
+
+    auto result = graph.FindShortestPath(1, 4);
+    assert(result.first == 4);
+    assert(result.second == std::vector<int>({ 1, 3, 4 })); 
+}
+
+void Test_DirectedGraph_FindShortestPath_NoPath()
+{
+    DirectedGraph<int> graph;
+    graph.AddVertex(); 
+    graph.AddVertex(); 
 
     try
     {
-        graph.FindShortestDistance(1, 3);
+        graph.FindShortestPath(1, 2);
         assert(false); 
     }
     catch (const std::runtime_error& e)
     {
-        assert(true); 
+        assert(std::string(e.what()) == "No path found");
     }
 }
+
+
+
 
 
 void Test_PriorityQueue_EnqueueAndPeek()
@@ -259,10 +274,24 @@ void Test_PriorityQueue_Contains()
 
 void RunTests()
 {
+    Test_DirectedGraph_AddVertex();
+    Test_DirectedGraph_AddEdge();
+    Test_DirectedGraph_GetVertex();
+    Test_DirectedGraph_GetVertex_Exception();
+    Test_DirectedGraph_FindShortestPath_Simple();
+    Test_DirectedGraph_FindShortestPath_MultiplePaths();
+    Test_DirectedGraph_FindShortestPath_NoPath();
+
     Test_UnDirectedGraph_AddVertex();
     Test_UnDirectedGraph_AddEdge();
     Test_UnDirectedGraph_GetVertex();
     Test_UnDirectedGraph_GetVertex_Exception();
-    Test_UnDirectedGraph_FindShortestDistance();
-    Test_UnDirectedGraph_FindShortestDistance_Exception();
+    Test_UnDirectedGraph_FindShortestPath_Simple();
+    Test_UnDirectedGraph_FindShortestPath_MultiplePaths();
+    Test_UnDirectedGraph_FindShortestPath_NoPath();
+
+    Test_PriorityQueue_Contains();
+    Test_PriorityQueue_GetLength();
+    Test_PriorityQueue_Dequeue();
+    Test_PriorityQueue_EnqueueAndPeek();
 }
